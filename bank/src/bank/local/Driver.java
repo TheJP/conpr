@@ -39,18 +39,18 @@ public class Driver implements bank.BankDriver {
 		return bank;
 	}
 
-	static class Bank implements bank.Bank {
+	static final class Bank implements bank.Bank {
 
 		/**
 		 * Lock for structural changes on the account map itself. Content of the accounts are locked independently.
 		 */
-		private Lock mapStructureLock = new ReentrantLock();
+		private final Lock mapStructureLock = new ReentrantLock();
 
 		//MessageDigest and Random are used to generate the Account Number
 		private static final int BUFFER_SIZE = 512;
 		private MessageDigest digest;
-		private Random r = new Random();
-		private byte[] buffer = new byte[BUFFER_SIZE];
+		private final Random r = new Random();
+		private final byte[] buffer = new byte[BUFFER_SIZE];
 		
 		//@GuardedBy("mapStructureLock")
 		private final Map<String, Account> accounts = new HashMap<String, Account>();
@@ -130,6 +130,7 @@ public class Driver implements bank.BankDriver {
 			else { a = to; b = from; }
 			if(!(from instanceof Account) || !(to instanceof Account)){ throw new IOException("Instance is not supported in this Bank"); }
 			((Account)a).accountLock.lock();
+			//An add operations of one or multiple account(s) between these calls is possible, but will never result in a deadlock
 			((Account)b).accountLock.lock();
 			try {
 				if(!to.isActive()){ throw new InactiveException(); }
@@ -143,13 +144,13 @@ public class Driver implements bank.BankDriver {
 
 	}
 
-	static class Account implements bank.Account {
-		private String number;
-		private String owner;
+	static final class Account implements bank.Account {
+		private final String number;
+		private final String owner;
 		private double balance = 0;
 		private boolean active = true;
 
-		private Lock accountLock = new ReentrantLock();
+		private final Lock accountLock = new ReentrantLock();
 
 		Account(String owner, String number) {
 			this.owner = owner;
