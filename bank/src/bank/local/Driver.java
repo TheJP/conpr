@@ -48,7 +48,7 @@ public class Driver implements bank.BankDriver {
 
 		//MessageDigest and Random are used to generate the Account Number
 		private static final int BUFFER_SIZE = 512;
-		private MessageDigest digest;
+		private final MessageDigest digest;
 		private final Random r = new Random();
 		private final byte[] buffer = new byte[BUFFER_SIZE];
 		
