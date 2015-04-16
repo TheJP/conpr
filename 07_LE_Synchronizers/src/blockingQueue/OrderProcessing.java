@@ -1,6 +1,13 @@
 package blockingQueue;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 public class OrderProcessing {
+
+	private final static int MAX = 100;
+	private final static BlockingQueue<Order> orders = new ArrayBlockingQueue<OrderProcessing.Order>(MAX, true);
+	private final static BlockingQueue<Order> validOrders = new ArrayBlockingQueue<OrderProcessing.Order>(MAX, true);
 	
 	public static void main(String[] args) {
 		int nCustomers = 10;
@@ -8,15 +15,15 @@ public class OrderProcessing {
 		int nProcessors = 3;
 
 		for (int i = 0; i < nCustomers; i++) {
-			new Customer("" + i /* TODO */).start();
+			new Customer("" + i, orders).start();
 		}
 
 		for (int i = 0; i < nValidators; i++) {
-			new OrderValidator(/* TODO */).start();
+			new OrderValidator(orders, validOrders).start();
 		}
 
 		for (int i = 0; i < nProcessors; i++) {
-			new OrderProcessor(/* TODO */).start();
+			new OrderProcessor(validOrders).start();
 		}
 	}
 	
@@ -37,8 +44,11 @@ public class OrderProcessing {
 	
 	static class Customer extends Thread {
 
-		public Customer(String name /*TODO */) {
+		private final BlockingQueue<Order> orders;
+
+		public Customer(String name, BlockingQueue<Order> orders) {
 			super(name);
+			this.orders = orders;
 		}
 		
 		private Order createOrder() {
@@ -48,7 +58,7 @@ public class OrderProcessing {
 		}
 		
 		private void handOverToValidator(Order o) throws InterruptedException {
-			//TODO
+			orders.put(o);
 		}
 		
 		@Override
@@ -66,10 +76,16 @@ public class OrderProcessing {
 	
 	static class OrderValidator extends Thread {
 
-		public OrderValidator(/*TODO */) {}
+		private final BlockingQueue<Order> orders;
+		private final BlockingQueue<Order> validOrders;
+
+		public OrderValidator(BlockingQueue<Order> orders, BlockingQueue<Order> validOrders) {
+			this.orders = orders;
+			this.validOrders = validOrders;
+		}
 		
 		public Order getNextOrder() throws InterruptedException {
-			return null; //TODO
+			return orders.take();
 		}
 		
 		public boolean isValid(Order o) {
@@ -77,7 +93,7 @@ public class OrderProcessing {
 		}
 		
 		public void handOverToProcessor(Order o) throws InterruptedException {
-			//TODO
+			validOrders.put(o);
 		}
 		
 		@Override
@@ -99,10 +115,14 @@ public class OrderProcessing {
 	
 	static class OrderProcessor extends Thread {
 
-		public OrderProcessor(/*TODO */) {}
+		private final BlockingQueue<Order> validorders;
+
+		public OrderProcessor(BlockingQueue<Order> validorders) {
+			this.validorders = validorders;
+		}
 		
 		public Order getNextOrder() throws InterruptedException {
-			return null; //TODO
+			return validorders.take();
 		}
 		
 		public void processOrder(Order o) {
