@@ -48,7 +48,7 @@ public class ConCrawler {
             "</html>\n";
     
     /** The webcrawler instance. */
-    private static Crawler crawler = new SeqCrawler();
+    private static Crawler crawler = new MyCrawler();
 
     /** Starts the webserver. */
     public static void main(String[] args) throws IOException {
