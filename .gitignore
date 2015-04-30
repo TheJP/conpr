@@ -9,6 +9,8 @@ tmp/
 *~.nib
 local.properties
 .settings/
+.worksheet
+.cache
 .loadpath
 /RemoteSystemsTempFiles
 
