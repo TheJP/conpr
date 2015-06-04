@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/rxjava-1.0.9.jar"/>
+	<classpathentry kind="lib" path="libs/rxscala_2.11-0.24.1.jar"/>
+	<classpathentry kind="lib" path="libs/rxswing-0.22.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
